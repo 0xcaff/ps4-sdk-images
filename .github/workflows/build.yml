@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-orbis:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,15 +18,67 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/0xcaff/ps4-sdk-images/orbis
+          tags: |
+            type=sha
+            type=edge,branch=main
+
+      - name: Download artifact
+        working-directory: images/orbis
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          github_token: ${{ secrets.ARTIFACT_GITHUB_TOKEN }}
+          run_id: 8022770949
+          workflow: workflow_name.yml
+          name: toolchain-llvm-10
+          skip_unpack: true
+          repo: OpenOrbis/OpenOrbis-PS4-Toolchain
+
       - name: Build and push
         uses: docker/build-push-action@v5
+        working-directory: images/orbis
         with:
           push: true
-          tags: ghcr.io/0xcaff/app:latest
-      - name: Build and Push image
-        run: |
-          docker buildx build \
-            --file ./images/Containerfile \
-            --platform linux/arm64,linux/amd64\
-            --tag quay.io/user/tools:${{ steps.date.outputs.date }} \
-            --push .
+          context: .
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  build-goldhen:
+    runs-on: ubuntu-latest
+    needs:
+      - build-orbis
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/0xcaff/ps4-sdk-images/goldhen
+          tags: |
+            type=sha
+            type=edge,branch=main
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        working-directory: images/goldhen
+        with:
+          push: true
+          context: .
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BASE_IMAGE_TAG=${{ github.sha }}
