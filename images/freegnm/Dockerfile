@@ -1,4 +1,5 @@
-FROM orbis as builder_base
+ARG BASE_IMAGE_TAG
+FROM ghcr.io/0xcaff/orbis:${BASE_IMAGE_TAG} as builder_base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -64,7 +65,7 @@ ADD https://storage.googleapis.com/shaderc/artifacts/prod/graphics_shader_compil
 
 RUN cd /tmp && tar -xzvf install.tgz
 
-FROM orbis
+FROM ghcr.io/0xcaff/orbis:${BASE_IMAGE_TAG}
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends software-properties-common && \
