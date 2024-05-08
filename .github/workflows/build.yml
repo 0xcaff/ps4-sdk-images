@@ -35,6 +35,7 @@ jobs:
           run_id: 8022770949
           workflow: workflow_name.yml
           name: toolchain-llvm-10
+          allow_forks: false
           skip_unpack: true
           repo: OpenOrbis/OpenOrbis-PS4-Toolchain
 
