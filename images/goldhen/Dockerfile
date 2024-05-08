@@ -1,5 +1,5 @@
 ARG BASE_IMAGE_TAG
-FROM ghcr.io/0xcaff/orbis:${BASE_IMAGE_TAG} as setup
+FROM ghcr.io/0xcaff/ps4-sdk-images/orbis:${BASE_IMAGE_TAG} as setup
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -19,7 +19,7 @@ RUN patch --silent --strip=1 --force < /tmp/sdk.diff
 
 RUN make
 
-FROM ghcr.io/0xcaff/orbis:${BASE_IMAGE_TAG} as runtime
+FROM ghcr.io/0xcaff/ps4-sdk-images/orbis:${BASE_IMAGE_TAG} as runtime
 
 ENV GOLDHEN_SDK=/opt/GoldHEN_Plugins_SDK
 

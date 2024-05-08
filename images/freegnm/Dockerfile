@@ -1,5 +1,5 @@
 ARG BASE_IMAGE_TAG
-FROM ghcr.io/0xcaff/orbis:${BASE_IMAGE_TAG} as builder_base
+FROM ghcr.io/0xcaff/ps4-sdk-images/orbis:${BASE_IMAGE_TAG} as builder_base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -65,7 +65,7 @@ ADD https://storage.googleapis.com/shaderc/artifacts/prod/graphics_shader_compil
 
 RUN cd /tmp && tar -xzvf install.tgz
 
-FROM ghcr.io/0xcaff/orbis:${BASE_IMAGE_TAG}
+FROM ghcr.io/0xcaff/ps4-sdk-images/orbis:${BASE_IMAGE_TAG}
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends software-properties-common && \
