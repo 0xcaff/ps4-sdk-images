@@ -1,0 +1,85 @@
+Index: src/driver_orbis.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/driver_orbis.c b/src/driver_orbis.c
+--- a/src/driver_orbis.c	(revision ab25c422a92f99b538971abbce2bdecf81a599c3)
++++ b/src/driver_orbis.c	(date 1703543454663)
+@@ -31,10 +31,12 @@
+     uint8_t vertexoffusgpr, uint8_t instanceoffusgpr, SceGnmDrawFlags flags
+ ) {
+ 	OrbisGnmDrawFlags castflags = *(OrbisGnmDrawFlags*)&flags;
+-	return sceGnmDrawIndexIndirect(
++	sceGnmDrawIndexIndirect(
+ 	    cmd, numdwords, dataoffset, stage, vertexoffusgpr, instanceoffusgpr,
+ 	    castflags
+ 	);
++
++	return 0;
+ }
+
+ int32_t gnmDriverDrawIndirect(
+@@ -79,7 +81,9 @@
+     uint32_t* cmd, uint32_t numdwords, int32_t videohandle,
+     uint32_t displaybufidx
+ ) {
+-	return sceGnmInsertWaitFlipDone(
++	sceGnmInsertWaitFlipDone(
+ 	    cmd, numdwords, videohandle, displaybufidx
+ 	);
++
++	return 0;
+ }
+Index: config.generic.mak
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config.generic.mak b/config.generic.mak
+--- a/config.generic.mak	(revision ab25c422a92f99b538971abbce2bdecf81a599c3)
++++ b/config.generic.mak	(date 1703545422992)
+@@ -15,10 +15,10 @@
+
+ # Enable KTX texture conversion support in GNF tools.
+ # Depends on libktx
+-USE_KTX=1
++USE_KTX=0
+ # Enable PNG image conversion support in GNF tools.
+ # Depends on libsng
+-USE_PNG=1
++USE_PNG=0
+
+ AR=ar
+ CC=cc
+Index: config.orbis.mak
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config.orbis.mak b/config.orbis.mak
+--- a/config.orbis.mak	(revision ab25c422a92f99b538971abbce2bdecf81a599c3)
++++ b/config.orbis.mak	(date 1703544212452)
+@@ -28,5 +28,5 @@
+ CFLAGS=-std=c11 -Wall -Wextra -Wpedantic -I. -O2 -g \
+     --target=x86_64-ps4-elf -fPIC \
+     -isysroot $(TOOLCHAIN) -isystem $(TOOLCHAIN)/include
+-LDFLAGS=-m elf_x86_64 -L$(TOOLCHAIN)/lib -lc -lkernel -lSceGnmDriver -L. -lgnm
++LDFLAGS=-m elf_x86_64 -L$(TOOLCHAIN)/lib -lc -lkernel -lSceGnmDriver -L. -lgnm -lSceVideoOut
+ LIB_LDFLAGS=-shared -m elf_x86_64 -L$(TOOLCHAIN)/lib -lc -lkernel -lSceGnmDriver -L. -lgnm
+Index: src/platform_orbis.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/platform_orbis.c b/src/platform_orbis.c
+--- a/src/platform_orbis.c	(revision ab25c422a92f99b538971abbce2bdecf81a599c3)
++++ b/src/platform_orbis.c	(date 1703543653508)
+@@ -29,5 +29,6 @@
+ }
+
+ int32_t gnmPlatGetBufferLabelAddress(int32_t videohandle, uint64_t* outaddr) {
+-	return sceVideoOutGetBufferLabelAddress(videohandle, (void**)outaddr);
++	sceVideoOutGetBufferLabelAddress(videohandle, (void**)outaddr);
++	return 0;
+ }

@@ -1,0 +1,17 @@
+Index: pkg/oelf/OELFGenDynlibData.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pkg/oelf/OELFGenDynlibData.go b/pkg/oelf/OELFGenDynlibData.go
+--- a/pkg/oelf/OELFGenDynlibData.go	(revision 7aaca3a57819779205e96a3036c917590e06231e)
++++ b/pkg/oelf/OELFGenDynlibData.go	(date 1708501826928)
+@@ -37,7 +37,7 @@
+ 	_nidSuffixKey = "518D64A635DED8C1E6B039B1C3E55230"
+
+ 	// _indexEncodingTable provides the encoding table for module indices that are appended to the end of NIDs.
+-	_indexEncodingTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
++	_indexEncodingTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-"
+ )
+
+ // _moduleToLibDictionary contains a mapping of module names to library (prx) paths

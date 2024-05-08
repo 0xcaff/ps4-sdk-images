@@ -1,0 +1,62 @@
+Index: src/util/u_thread.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/util/u_thread.h b/src/util/u_thread.h
+--- a/src/util/u_thread.h	(revision 751555965cef6ea44b6d2dd9edac332b9bc93868)
++++ b/src/util/u_thread.h	(date 1703449273115)
+@@ -116,12 +116,6 @@
+  * util_barrier
+  */
+
+-#if defined(HAVE_PTHREAD) && !defined(__APPLE__) && !defined(__HAIKU__)
+-
+-typedef pthread_barrier_t util_barrier;
+-
+-#else /* If the OS doesn't have its own, implement barriers using a mutex and a condvar */
+-
+ typedef struct {
+    unsigned count;
+    unsigned waiters;
+@@ -130,8 +124,6 @@
+    cnd_t condvar;
+ } util_barrier;
+
+-#endif
+-
+ void util_barrier_init(util_barrier *barrier, unsigned count);
+
+ void util_barrier_destroy(util_barrier *barrier);
+Index: src/amd/vulkan/radv_pipeline_graphics.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/amd/vulkan/radv_pipeline_graphics.c b/src/amd/vulkan/radv_pipeline_graphics.c
+--- a/src/amd/vulkan/radv_pipeline_graphics.c	(revision 751555965cef6ea44b6d2dd9edac332b9bc93868)
++++ b/src/amd/vulkan/radv_pipeline_graphics.c	(date 1711761395179)
+@@ -169,6 +169,9 @@
+    case MESA_SHADER_FRAGMENT:
+       radv_pipeline_link_fs(nir);
+       break;
++   case MESA_SHADER_COMPUTE:
++		// Skip linking for compute shaders.
++      break;
+    default:
+       unreachable("Invalid graphics shader stage");
+    }
+Index: config.mak
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config.mak b/config.mak
+--- a/config.mak	(revision 751555965cef6ea44b6d2dd9edac332b9bc93868)
++++ b/config.mak	(date 1703450702687)
+@@ -9,4 +9,4 @@
+ PYTHON=python3
+ CFLAGS=-std=gnu11 -Wall -O2 -g $(SHARED_FLAGS)
+ CXXFLAGS=-std=c++17 -Wall -O2 -g $(SHARED_FLAGS)
+-LDFLAGS=-lm
++LDFLAGS=-lm -pthread -std=c++17
